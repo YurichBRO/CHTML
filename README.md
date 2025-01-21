@@ -74,9 +74,18 @@ To use the generated HTML you can redirect it by piping or redirection operator:
 ./test/out.c.exe > output.html
 ```
 
+You can also use the executable as a parameter to exe-server.py. Exe-server.py - a python server, that requires you to pass it a single executable. It starts a local server, which listens at "/" and sends the output of a program to the user. You can use it like this:
+
+```bash
+python exe-server.py test/out.c.exe
+```
+
+Then go to localhost:8000 and you'll see a test page, which gets regenerated each time you reload the page: you can see it as the time on the screen changes.
+
 ### Base template
 
 To generate a basic template, you can use the `basegen.c` program. It generates a template with the necessary includes and main function.
+
 ```bash
 gcc -o basegen basegen.c
 ./basegen > base.html
@@ -87,3 +96,4 @@ gcc -o basegen basegen.c
 1.0.0 - Initial release. Uses secondary file for HTML output. Accepted 4 arguments.
 2.0.0 - Uses stdout for HTML output. Accepted 3 arguments (got rid of secondary file).
 2.1.0 - Added basegen.c for generating a base template.
+2.2.0 - Added a python server that serves a single page that is generated a provided executable.
