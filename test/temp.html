@@ -1,6 +1,7 @@
 `
+#include <stdio.h>
 #include <time.h>
-START
+int main() {
 `
 <!DOCTYPE html>
 <html lang="en">
@@ -12,12 +13,13 @@ START
 <body>
     <p>Testing backtick escaping</p>
     `
-    P("\`\`\\n")
+    printf("\`\`\\n");
     `
     <p>Getting current time with chtml:</p>
     `
     time_t t = time(NULL);
-    P(ctime(&t));
+    printf(ctime(&t));
     `
 </body>
 </html>
+`}`

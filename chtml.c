@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 void write_symbol(FILE *out, char symbol) {
-    fprintf(out, "fputc(%i, _chtml_output);\n", symbol);
+    fprintf(out, "putchar(%i);\n", symbol);
 }
 
 void write_template(FILE *out, char symbol) {
@@ -15,9 +15,7 @@ void write_template_string(FILE *out, char *str) {
     }
 }
 
-void chtml2c(FILE *in, FILE *out, char *secondary_output) {
-    fprintf(out, "#include <stdio.h>\n");
-    fprintf(out, "#define START int main(void) {FILE *_chtml_output = fopen(\"%s\", \"w\");\n", secondary_output);
+void chtml2c(FILE *in, FILE *out) {
     unsigned char inside = 0;
     unsigned char escaped = 0;
     char c;
@@ -36,11 +34,6 @@ void chtml2c(FILE *in, FILE *out, char *secondary_output) {
             continue;
         }
         if (c == '`') {
-            if (inside) {
-                write_template_string(out, "\n#undef P\n");
-            } else {
-                write_template_string(out, "\n#define P(...) fprintf(_chtml_output, __VA_ARGS__);\n");
-            }
             inside = !inside;
             continue;
         }
@@ -50,14 +43,13 @@ void chtml2c(FILE *in, FILE *out, char *secondary_output) {
             write_symbol(out, c);
         }
     }
-    fprintf(out, "fclose(_chtml_output);\nreturn 0;\n}\n");
     fclose(out);
     fclose(in);
 }
 
 int main(int argc, char **argv) {
-    if (argc != 5) {
-        printf("Usage: %s <directory> <input_file> <output_file> <secondary_output>\n", argv[0]);
+    if (argc != 4) {
+        printf("Usage: %s <directory> <input_file> <output_file>\n", argv[0]);
         return 1;
     }
     char input_path[1024];
@@ -78,8 +70,7 @@ int main(int argc, char **argv) {
         return 1;
     }
     
-    char *secondary_output = argv[4];
-    chtml2c(in, out, secondary_output);
+    chtml2c(in, out);
     
     char command[1024];
     sprintf(command, "gcc -o %s.exe %s", output_path, output_path);

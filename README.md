@@ -7,37 +7,38 @@ A templating engine that combines C and HTML. It compiles to C code and creates 
 The template uses HTML as the default language. To embed C code within the template, enclose it in backticks (`). Each backtick toggles between HTML and C mode.
 The structure of a template is as follows:
 
-```html
-`
-[C code that needs to be outside the main function]
-START
-`
-[HTML code]
-[C code snippets embedded within HTML as needed]
-```
-
 Example:
 
 ```html
 `
+#include <stdio.h>
 #include <time.h>
-START
+int main() {
 `
 <body>
     <h1>Hello, world!</h1>
     <p>The current time is: `
         time_t t = time(NULL);
-        P(ctime(&t));
+        printf(ctime(&t));
     `</p>
 </body>
+`}`
 ```
 
-Important: Any C code that needs to be outside of the main function must be placed before the `START` macro.
+Important: Any text outside the backticks is later converted into C code, that's why it needs to be inside of the main function.
 
-## Defined macros
+### Escaping
 
-- `START` - Indicates the beginning of the main function and initializes the output file.
-- `P(...)` - Functions like printf but writes to the output file.
+You can prefix any character with a backslash to escape it. Note, that any backslashes that are supposed to be interpreted literally need to be escaped. Example:
+
+```html
+<p>This is a backslash: \</p>   <!--incorrect-->
+<p>This is a backslash: \\</p>  <!--correct-->
+`
+printf("newline: \n");   // incorrect
+printf("newline: \\n");  // correct
+`
+```
 
 ## Usage
 
@@ -47,22 +48,33 @@ To use the templating engine, you first need to compile it. The engine requires 
 gcc -o chtml chtml.c
 ```
 
-The program requires 4 arguments:
+The program requires 3 arguments:
 
 1. directory
 2. template file
 3. output file
-4. secondary output file
 
 Example usage:
 
 ```bash
-./chtml ./test temp.html out.c index.html
+./chtml ./test temp.html out.c
 ```
 
 This command generates two files:
 
-1. `out.c` - The intermediate C code
-2. `out.c.exe` - The executable that generates `index.html`
+1. `./test/out.c` - The intermediate C code
+2. `./test/out.c.exe` - The executable that generates the HTML output
 
 Typically, you'll compile the template once and run the resulting executable whenever you need to generate a new HTML file.
+
+To use the generated HTML you can redirect it by piping or redirection operator:
+
+```bash
+./test/out.c.exe | grep "Hello"
+./test/out.c.exe > output.html
+```
+
+## Changelog
+
+1.0.0 - Initial release. Uses secondary file for HTML output. Accepted 4 arguments.
+2.0.0 - Uses stdout for HTML output. Accepted 3 arguments (got rid of secondary file).
