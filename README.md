@@ -74,6 +74,14 @@ To use the generated HTML you can redirect it by piping or redirection operator:
 ./test/out.c.exe > output.html
 ```
 
+### Base template
+
+To generate a basic template, you can use the `basegen.c` program. It generates a template with the necessary includes and main function.
+```bash
+gcc -o basegen basegen.c
+./basegen > base.html
+```
+
 ## Changelog
 
 1.0.0 - Initial release. Uses secondary file for HTML output. Accepted 4 arguments.
