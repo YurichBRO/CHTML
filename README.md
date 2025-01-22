@@ -97,3 +97,7 @@ gcc -o basegen basegen.c
 2.0.0 - Uses stdout for HTML output. Accepted 3 arguments (got rid of secondary file).
 2.1.0 - Added basegen.c for generating a base template.
 2.2.0 - Added a python server that serves a single page that is generated a provided executable.
+
+## Credits
+
+Tsoding: <https://github.com/tsoding> (can't quite remember in which repository or stream he did that, but I'm pretty sure he did do something really similar).
