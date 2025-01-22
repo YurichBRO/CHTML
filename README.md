@@ -94,8 +94,11 @@ gcc -o basegen basegen.c
 ## Changelog
 
 1.0.0 - Initial release. Uses secondary file for HTML output. Accepted 4 arguments.
+
 2.0.0 - Uses stdout for HTML output. Accepted 3 arguments (got rid of secondary file).
+
 2.1.0 - Added basegen.c for generating a base template.
+
 2.2.0 - Added a python server that serves a single page that is generated a provided executable.
 
 ## Credits
